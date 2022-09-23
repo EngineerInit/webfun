@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<hl>optimized for firefox</h1>
+<a href="ielow.html">seem slow try the version optimized for IE</a>
+
+<canvas id="myCanvas" width="300" height="300" style="border:1px solid #d3d3d3;">
+Welp no Canvas support no game 4 you ):</canvas>
+
+
+<img id="overview" width="200" height="200"
+src="cssmap.png" alt="overview">
+
+<a href="indew.htmlx">^</a>
+
+<script>
+
+var img = document.getElementById("overview");
+img.crossOrigin = "anonymous";
+var xdir = 0;
+var ydir = 0;
+var xv =0;
+var yv =0;
+var x = 0;
+var y = 0;
+
+var vx =0;
+var vy =0;
+
+var win =0;
+var score =0;
+var time =2000;
+var health =100;
+var filpfloop =0;
+
+var findswhere =0;
+const findsx = [870,530,187,135];
+const findsy = [272,955,725,138];
+
+//870 272
+//530 955
+//187 725
+//135 138
+
+
+document.addEventListener('keydown', function(event) {
+    if (event.keyCode == 37) {
+       xdir = -1;
+
+    }
+    else if (event.keyCode == 39) {
+       xdir = 1;
+    }
+
+    if (event.keyCode == 38) {
+       ydir = -1;
+
+    }
+    else if (event.keyCode == 40) {
+       ydir = 1;
+    }
+}, true);
+
+document.addEventListener('keyup', function(event) {
+    if (event.keyCode == 37) {
+       xdir = 0;
+
+    }
+    else if (event.keyCode == 39) {
+       xdir = 0;
+    }
+
+    if (event.keyCode == 38) {
+       ydir = 0;
+
+    }
+    else if (event.keyCode == 40) {
+       ydir = 0;
+    }
+}, true);
+
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+setInterval(draw,15);
+
+function reset() {
+x=0;y=0;xv=0;yv=0;score=0;time=2000;yv=0;health=100;win=0;findswhere =1;
+}
+
+
+function draw() {
+if (filpfloop == 1){
+time -= 1;
+
+if (time < 1)
+reset();
+ctx.fillStyle = "blue";
+ctx.fillRect(0, 0, 300, 300);
+
+ctx.drawImage(img, -x-50, -y-25);
+
+ctx.fillStyle = "green";
+ctx.fillRect(-x+findsx[findswhere]-25, -y+findsy[findswhere]-25, 50, 50);
+
+
+
+
+xv+=xdir;
+yv+=ydir;
+
+x += xv;
+y += yv;
+
+vx = x/25+125;
+vy = y/25+125;
+
+xv = xv*0.99;
+yv = yv*0.99;
+
+var imgData = ctx.getImageData(vx-1, vy-1, 27, 27);
+for (var i = 0, n = imgData.data.length; i < n; i += 4) {
+red = imgData.data[i];
+green = imgData.data[i+1];
+blue = imgData.data[i+2];
+alpha = imgData.data[i+3];
+if (red == 0 && green == 0 && blue >0){
+xdir=xdir*0.5;
+ydir=ydir*0.5;
+health -=1;
+if (health < 1){
+reset();
+
+}
+i = n;
+}
+if (red == 0 && green > 100 && blue ==0 ){
+score += 1;
+
+if (health < 100)
+health += Math.floor(100/score)+1;
+
+time = 1000-(score*50);
+findswhere +=1;
+if (findswhere > 3)
+findswhere =0;
+i = n;
+}
+}else filpfloop = -filpfloop;
+}
+
+
+
+ctx.fillStyle = "red";
+
+ctx.fillRect(vx, vy, 25, 25);
+
+
+ctx.fillStyle = "#000000";
+ctx.font = "15px Arial";
+ctx.fillText("health " + health + " score "  + score + " timeleft "  + time, 15, 15);
+
+
+//ctx.fillText("x " + x + " y " + y , 15, 50);
+
+//ctx.fillStyle = "green";
+
+//ctx.fillRect(0, 0, 50, 50);
+//ctx.drawImage(img, 0, 0,50,50);
+
+//ctx.fillStyle = "red";
+
+//ctx.fillRect((x-50)/20, (y-25)/20, 5, 5);
+//ctx = c.getContext("2d");
+}
+</script>
+
+</body>
+</html>
